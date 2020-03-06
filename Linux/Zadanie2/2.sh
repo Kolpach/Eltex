@@ -1,5 +1,4 @@
 #!/bin/bash
-# Primer while
 directory=$1
 maxFirstFolders=$2
 maxSecondFolders=$3
