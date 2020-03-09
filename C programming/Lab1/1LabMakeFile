@@ -1,0 +1,2 @@
+firstLabRunable: 1Lab.c
+	gcc -o firstLabRunable 1Lab.c
