@@ -23,6 +23,14 @@ void encriptWord(unsigned char* text, int length){
                 *pToFirstSym = ('A' + *pToFirstSym - 'a');//First sym to uppercase
                 *pToSecondSym = ('a' + *pToSecondSym - 'A');//Second sym to lowercase
             }
+	    else if(*pToFirstSym <= 255 && *pToFirstSym >= 224 && *pToSecondSym <= 223 && *pToSecondSym >= 192) {
+		*pToFirstSym = (192 + *pToFirstSym - 224);//First sym to uppercase
+                *pToSecondSym = (224 + *pToSecondSym - 192);//Second sym to lowercase
+	    }
+	    else if(*pToFirstSym <= 223 && *pToFirstSym >= 192 && *pToSecondSym <= 255 && *pToSecondSym >= 224) {
+		*pToFirstSym = (224 + *pToFirstSym - 192);//First sym to lowercase
+                *pToSecondSym = (192 + *pToSecondSym - 224);//Second sym to Uppercase
+	    }
         }
         //changing symbols
         unsigned char local = *pToFirstSym;
@@ -36,6 +44,10 @@ unsigned char isValidSym(unsigned char sym) {
         return 1;
     if(sym <= (unsigned char)('Z') && sym >= (unsigned char)('A'))
         return 1;
+
+    if(sym <= 254 && sym >= 192)
+        return 1;
+
     if(sym <= (unsigned char)('9') && sym >= (unsigned char)('0'))
         return 1;
     return 0;
@@ -47,7 +59,7 @@ void changeSpecialSymbol(unsigned char* pToSym,unsigned char* additionalArgument
         ++i;
     }
     //changing symbol only if symbol in string
-    if(additionalArguments[i] != '\0'){
+    if(additionalArguments[i] != '\0' && additionalArguments[i] != '\n'){
         //getting index of another element in pair
         *pToSym = additionalArguments[i + 1 - 2 * (i % 2) ];
     }
@@ -66,14 +78,10 @@ unsigned char* encript(unsigned char* input, unsigned char* additionalArguments)
         //symbol = text[i];
         if(!isValidSym(*pSecond)) {
             changeSpecialSymbol(pSecond, additionalArguments);
-	    if(*pSecond == ' ') {
+	    if(*pSecond == ' ' || *pSecond == '\n') {
 		//encripts one word   with pSecond - pFirst length from pFirst pos   in line
                 encriptWord(pFirst, pSecond - pFirst);
                 //finding begining of next word
-                pFirst = pSecond + 1;
-	    }
-	    if(*pSecond == '\n'){
-		encriptWord(pFirst, pSecond - pFirst - 1);
                 pFirst = pSecond + 1;
 	    }
         }
